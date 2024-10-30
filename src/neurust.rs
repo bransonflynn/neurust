@@ -45,7 +45,7 @@ impl NeuralNetwork {
 
     pub fn get_neuron(&self, id: u64) -> Option<&Neuron> {
         if self.neurons_map.contains_key(&id) {
-            let result= self.neurons_map.get(&id);
+            let result: Option<&Neuron>= self.neurons_map.get(&id);
             match result {
                 Some(neur) => return Some(neur),
                 None => return None,
