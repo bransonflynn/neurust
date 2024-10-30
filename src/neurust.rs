@@ -22,7 +22,7 @@ pub mod neu {
             weights: a_weights,
             bias: a_bias,
         };
-        //mod_id_count();
+        //bump_id_counter();
         result
     }
 }
@@ -84,13 +84,13 @@ pub mod net {
             id: 0, // todo setup static counter for ID
             neurons_map: neurons_map_new,
         };
-        //mod_id_count();
+        //bump_id_counter();
         result
     }
 }
 
 pub unsafe trait Identifier {
-    fn bump_id(self);
+    fn bump_id_counter(self);
 
-    fn get_id_value(self) -> u64;
+    fn get_id_counter(self) -> u64;
 }
