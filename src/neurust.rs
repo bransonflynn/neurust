@@ -1,6 +1,5 @@
-//static mut ID_COUNTER_NEURON: u64 = 0;
+///static mut ID_COUNTER_NEURON: u64 = 0;
 //static mut ID_COUNTER_NEURALNETWORK: u64 = 0;
-
 use std::collections::HashMap;
 
 #[allow(dead_code)]
@@ -23,6 +22,7 @@ pub fn make_neuron(a_weights: Vec<i32>, a_bias: i32) -> Neuron {
         weights: a_weights,
         bias: a_bias,
     };
+    //mod_id_count();
     result
 }
 
@@ -39,13 +39,15 @@ pub struct NeuralNetwork {
     neurons_map: HashMap<u64, Neuron>,
 }
 impl NeuralNetwork {
+    pub fn make_neural_network() {}
+
     pub fn add_neuron(&mut self, neur: Neuron) {
         self.neurons_map.insert(neur.id, neur);
     }
 
     pub fn get_neuron(&self, id: u64) -> Option<&Neuron> {
         if self.neurons_map.contains_key(&id) {
-            let result: Option<&Neuron>= self.neurons_map.get(&id);
+            let result: Option<&Neuron> = self.neurons_map.get(&id);
             match result {
                 Some(neur) => return Some(neur),
                 None => return None,
@@ -53,4 +55,10 @@ impl NeuralNetwork {
         }
         None
     }
+}
+
+pub unsafe trait Identifier {
+    fn mod_id_count(self);
+
+    fn get_id_count(self) -> u64;
 }
