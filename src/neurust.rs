@@ -30,7 +30,8 @@ pub fn make_neuron(a_weights: Vec<i32>, a_bias: i32) -> Neuron {
 #[allow(unused_variables)]
 pub fn sigmoid(x: f64) -> f64 {
     // todo - doesnt work
-    1.0 / (1.0 + (-x).exp())
+    let result: f64 = 1.0 / (1.0 + (-x).exp());
+    result
 }
 
 #[allow(dead_code)]
@@ -39,7 +40,15 @@ pub struct NeuralNetwork {
     neurons_map: HashMap<u64, Neuron>,
 }
 impl NeuralNetwork {
-    pub fn make_neural_network() {}
+    pub fn make_neural_network() -> NeuralNetwork {
+        let neurons_map_new: HashMap<u64, Neuron> = HashMap::new();
+        let result: NeuralNetwork = NeuralNetwork {
+            id: 0, // todo setup static counter for ID
+            neurons_map: neurons_map_new,
+        };
+        //mod_id_count();
+        result
+    }
 
     pub fn add_neuron(&mut self, neur: Neuron) {
         self.neurons_map.insert(neur.id, neur);
@@ -58,7 +67,7 @@ impl NeuralNetwork {
 }
 
 pub unsafe trait Identifier {
-    fn mod_id_count(self);
+    fn bump_id(self);
 
-    fn get_id_count(self) -> u64;
+    fn get_id_value(self) -> u64;
 }
