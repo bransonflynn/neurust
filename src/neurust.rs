@@ -13,6 +13,11 @@ impl Neuron {
 
 #[allow(dead_code)]
 #[allow(unused_variables)]
-pub fn sigmoid(x: i32) {
-    //
+pub fn sigmoid(x: f64) -> f64 {
+    1.0 / (1.0 + (-x))
+}
+
+#[allow(unused_variables)]
+pub fn exp(input: &mut (i32, i32)) {
+    //utils::math::sigmoid(0.6)
 }
