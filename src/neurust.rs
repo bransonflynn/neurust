@@ -9,8 +9,10 @@ impl Neuron {
     pub fn feed_forward(&self, inputs: (i32, i32)) {
         //
     }
+}
 
-    pub fn sigmoid(x: i32) {
-        //
-    }
+#[allow(dead_code)]
+#[allow(unused_variables)]
+pub fn sigmoid(x: i32) {
+    //
 }
