@@ -47,18 +47,16 @@ pub mod net {
         neurons_map: HashMap<u64, neu::Neuron>,
     }
     impl NeuralNetwork {
-        pub fn create() -> NeuralNetwork {
-            let neurons_map_new: HashMap<u64, neu::Neuron> = HashMap::new();
-            let result: NeuralNetwork = NeuralNetwork {
-                id: 0, // todo setup static counter for ID
-                neurons_map: neurons_map_new,
-            };
-            //mod_id_count();
-            result
-        }
-
         pub fn add_neuron(&mut self, neur: neu::Neuron) {
             self.neurons_map.insert(neur.id(), neur);
+        }
+
+        pub fn add_neurons(&mut self, neurons: Vec<neu::Neuron>) {
+            for neur in neurons {
+                if !self.neurons_map.contains_key(&neur.id()) {
+                    self.neurons_map.insert(neur.id(), neur);
+                }
+            }
         }
 
         pub fn get_neuron(&self, id: u64) -> Option<&neu::Neuron> {
@@ -71,6 +69,23 @@ pub mod net {
             }
             None
         }
+
+        pub fn has_neuron(&self, id: u64) -> bool {
+            if self.neurons_map.contains_key(&id) {
+                return true;
+            }
+            false
+        }
+    }
+
+    pub fn create() -> NeuralNetwork {
+        let neurons_map_new: HashMap<u64, neu::Neuron> = HashMap::new();
+        let result: NeuralNetwork = NeuralNetwork {
+            id: 0, // todo setup static counter for ID
+            neurons_map: neurons_map_new,
+        };
+        //mod_id_count();
+        result
     }
 }
 
