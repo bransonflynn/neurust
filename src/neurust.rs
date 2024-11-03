@@ -1,96 +1,127 @@
-#[allow(dead_code)]
-#[allow(unused_variables)]
-pub mod neu {
-    pub struct Neuron {
-        id: u64,
-        weights: Vec<i32>,
-        bias: i32,
-    }
-    impl Neuron {
-        pub fn feed_forward(&self, inputs: Vec<i32>) {
-            //let total = dot_bound(self.weights, input);
-        }
+use std::collections::HashMap;
+use std::sync::atomic::AtomicU64;
+use std::sync::atomic::Ordering::SeqCst;
 
-        pub fn id(&self) -> u64 {
-            self.id
-        }
+pub struct Neuron {
+    pub id: u64,
+    weights: Vec<i32>,
+    bias: i32,
+}
+impl Neuron {
+    pub fn feed_forward(&self, _inputs: Vec<i32>) {
+        //let total = dot_bound(self.weights, input);
     }
 
-    pub fn create(a_weights: Vec<i32>, a_bias: i32) -> Neuron {
-        let result: Neuron = Neuron {
-            id: 0, // todo setup static counter for ID
-            weights: a_weights,
-            bias: a_bias,
-        };
-        //bump_id_counter();
-        result
+    pub fn display(&self) -> String {
+        return "Neuron{id=".to_owned()
+            + &self.id.to_string()
+            + ", weights="
+            + &format!("{:?}", self.weights)
+            + ", bias="
+            + &self.bias.to_string()
+            + "}";
+    }
+}
+impl Clone for Neuron {
+    fn clone(&self) -> Self {
+        Self {
+            id: self.id.clone(),
+            weights: self.weights.clone(),
+            bias: self.bias.clone(),
+        }
     }
 }
 
-#[allow(dead_code)]
-#[allow(unused_variables)]
+pub fn create_neuron(w: Vec<i32>, b: i32) -> Neuron {
+    return Neuron {
+        id: unique_id_neuron(),
+        weights: w,
+        bias: b,
+    };
+}
+
 pub fn sigmoid(x: f64) -> f64 {
     // todo - doesnt work
-    let result: f64 = 1.0 / (1.0 + (-x).exp());
-    result
+    return 1.0 / (1.0 + (-x).exp());
 }
 
-#[allow(dead_code)]
-#[allow(unused_variables)]
-pub mod net {
-    use std::collections::HashMap;
-
-    use super::neu;
-
-    pub struct NeuralNetwork {
-        id: u64,
-        neurons_map: HashMap<u64, neu::Neuron>,
-    }
-    impl NeuralNetwork {
-        pub fn add_neuron(&mut self, neur: neu::Neuron) {
-            self.neurons_map.insert(neur.id(), neur);
-        }
-
-        pub fn add_neurons(&mut self, neurons: Vec<neu::Neuron>) {
-            for neur in neurons {
-                if !self.neurons_map.contains_key(&neur.id()) {
-                    self.neurons_map.insert(neur.id(), neur);
-                }
-            }
-        }
-
-        pub fn get_neuron(&self, id: u64) -> Option<&neu::Neuron> {
-            if self.neurons_map.contains_key(&id) {
-                let result: Option<&neu::Neuron> = self.neurons_map.get(&id);
-                match result {
-                    Some(neur) => return Some(neur),
-                    None => return None,
-                }
-            }
-            None
-        }
-
-        pub fn has_neuron(&self, id: u64) -> bool {
-            if self.neurons_map.contains_key(&id) {
-                return true;
-            }
-            false
+pub struct NeuralNetwork {
+    id: u64,
+    neurons_map: HashMap<u64, Neuron>,
+}
+impl NeuralNetwork {
+    pub fn add_neuron(&mut self, neur: Neuron) {
+        if !self.neurons_map.contains_key(&neur.id) {
+            self.neurons_map.insert(neur.id, neur);
         }
     }
 
-    pub fn create() -> NeuralNetwork {
-        let neurons_map_new: HashMap<u64, neu::Neuron> = HashMap::new();
-        let result: NeuralNetwork = NeuralNetwork {
-            id: 0, // todo setup static counter for ID
-            neurons_map: neurons_map_new,
-        };
-        //bump_id_counter();
-        result
+    pub fn add_neurons(&mut self, neurons: Vec<Neuron>) {
+        for neur in neurons {
+            if !self.neurons_map.contains_key(&neur.id) {
+                self.neurons_map.insert(neur.id, neur);
+            }
+        }
+    }
+
+    pub fn get_neuron(&self, id: u64) -> Option<&Neuron> {
+        if self.neurons_map.contains_key(&id) {
+            match self.neurons_map.get(&id) {
+                Some(neur) => return Some(neur),
+                None => return None,
+            }
+        } else {
+            return None;
+        }
+    }
+
+    pub fn has_neuron(&self, id: u64) -> bool {
+        return self.neurons_map.contains_key(&id);
+    }
+
+    pub fn display(&self) -> String {
+        return ("NeuralNetwork{id=".to_owned()
+            + &self.id.to_string()
+            + ", neurons_map_keys_len="
+            + &self.neurons_map.keys().len().to_string()
+            + "}")
+            .to_string();
+    }
+}
+impl Clone for NeuralNetwork {
+    fn clone(&self) -> Self {
+        Self {
+            id: self.id.clone(),
+            neurons_map: self.neurons_map.clone(),
+        }
     }
 }
 
-pub unsafe trait Identifier {
-    fn bump_id_counter(self);
+pub fn create_network() -> NeuralNetwork {
+    return NeuralNetwork {
+        id: unique_id_network(),
+        neurons_map: HashMap::new(),
+    };
+}
 
-    fn get_id_counter(self) -> u64;
+pub fn unique_id_neuron() -> u64 {
+    static NEURON_ID_COUNTER: AtomicU64 = AtomicU64::new(0);
+    let id: u64 = NEURON_ID_COUNTER.fetch_add(1, SeqCst);
+    assert_ne!(
+        id,
+        u64::MAX,
+        "Network ID counter has overflowed and is no longer unique"
+    );
+    return id;
+}
+
+pub fn unique_id_network() -> u64 {
+    static NETWORK_ID_COUNTER: AtomicU64 = AtomicU64::new(0);
+    let id: u64 = NETWORK_ID_COUNTER.fetch_add(1, SeqCst);
+    assert_ne!(
+        id,
+        u64::MAX,
+        "Network ID counter has overflowed and is no longer unique"
+    );
+    return id;
 }

@@ -4,5 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+atomic = "0.6.0"
 num = "0.4.3"
 numpy = "0.22.1"
