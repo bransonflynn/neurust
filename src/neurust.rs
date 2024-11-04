@@ -32,14 +32,9 @@ pub fn create_neuron(w: Vec<i32>, b: i32) -> Neuron {
     };
 }
 
-pub fn sigmoid(x: f64) -> f64 {
-    // todo - doesnt work
-    return 1.0 / (1.0 + (-x).exp());
-}
-
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct NeuralNetwork {
-    id: u64,
+    pub id: u64,
     name: String,
     neurons_map: HashMap<u64, Neuron>,
 }
@@ -73,11 +68,15 @@ impl NeuralNetwork {
         return self.neurons_map.contains_key(&id);
     }
 
+    pub fn feed_forward(&self, _input: Vec<i32>) {
+        //
+    }
+
     pub fn display(&self) -> String {
         return ("NeuralNetwork{id=".to_owned()
             + &self.id.to_string()
-            + ", name=" 
-            + &self.name.to_string()
+            + ", name="
+            + &self.name
             + ", neurons_map_keys_len="
             + &self.neurons_map.keys().len().to_string()
             + "}")
@@ -113,4 +112,14 @@ pub fn unique_id_network() -> u64 {
         "Network ID counter has overflowed and is no longer unique"
     );
     return id;
+}
+
+pub fn sigmoid(v: f64) -> f64 {
+    if v < -40.0 {
+        0.0
+    } else if v > 40.0 {
+        1.0
+    } else {
+        1.0 / (1.0 + f64::exp(-v))
+    }
 }
