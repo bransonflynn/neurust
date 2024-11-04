@@ -24,11 +24,11 @@ impl Neuron {
 }
 impl Clone for Neuron {
     fn clone(&self) -> Self {
-        Self {
+        return Self {
             id: self.id.clone(),
             weights: self.weights.clone(),
             bias: self.bias.clone(),
-        }
+        };
     }
 }
 
@@ -90,10 +90,10 @@ impl NeuralNetwork {
 }
 impl Clone for NeuralNetwork {
     fn clone(&self) -> Self {
-        Self {
+        return Self {
             id: self.id.clone(),
             neurons_map: self.neurons_map.clone(),
-        }
+        };
     }
 }
 
