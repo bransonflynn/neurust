@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::sync::atomic::AtomicU64;
 use std::sync::atomic::Ordering::SeqCst;
 
+#[derive(Debug, Clone, Default, PartialEq)]
 pub struct Neuron {
     pub id: u64,
     weights: Vec<i32>,
@@ -22,15 +23,6 @@ impl Neuron {
             + "}";
     }
 }
-impl Clone for Neuron {
-    fn clone(&self) -> Self {
-        return Self {
-            id: self.id.clone(),
-            weights: self.weights.clone(),
-            bias: self.bias.clone(),
-        };
-    }
-}
 
 pub fn create_neuron(w: Vec<i32>, b: i32) -> Neuron {
     return Neuron {
@@ -45,6 +37,7 @@ pub fn sigmoid(x: f64) -> f64 {
     return 1.0 / (1.0 + (-x).exp());
 }
 
+#[derive(Debug, Clone, Default, PartialEq)]
 pub struct NeuralNetwork {
     id: u64,
     neurons_map: HashMap<u64, Neuron>,
@@ -86,14 +79,6 @@ impl NeuralNetwork {
             + &self.neurons_map.keys().len().to_string()
             + "}")
             .to_string();
-    }
-}
-impl Clone for NeuralNetwork {
-    fn clone(&self) -> Self {
-        return Self {
-            id: self.id.clone(),
-            neurons_map: self.neurons_map.clone(),
-        };
     }
 }
 
