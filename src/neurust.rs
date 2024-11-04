@@ -40,6 +40,7 @@ pub fn sigmoid(x: f64) -> f64 {
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct NeuralNetwork {
     id: u64,
+    name: String,
     neurons_map: HashMap<u64, Neuron>,
 }
 impl NeuralNetwork {
@@ -75,6 +76,8 @@ impl NeuralNetwork {
     pub fn display(&self) -> String {
         return ("NeuralNetwork{id=".to_owned()
             + &self.id.to_string()
+            + ", name=" 
+            + &self.name.to_string()
             + ", neurons_map_keys_len="
             + &self.neurons_map.keys().len().to_string()
             + "}")
@@ -82,9 +85,10 @@ impl NeuralNetwork {
     }
 }
 
-pub fn create_network() -> NeuralNetwork {
+pub fn create_network(n: &str) -> NeuralNetwork {
     return NeuralNetwork {
         id: unique_id_network(),
+        name: n.to_string(),
         neurons_map: HashMap::new(),
     };
 }
